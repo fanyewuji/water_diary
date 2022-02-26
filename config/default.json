@@ -1,4 +1,0 @@
-{
-    "mongoURI": "mongodb+srv://fanyewuji:wu2172323ji@water-diary.3q3nd.mongodb.net/drinkWater?retryWrites=true&w=majority",
-    "jwtSecret": "drinkwater"
-}

@@ -1,13 +1,37 @@
 const express = require('express');
-
 const router = express.Router();
+const { check, validationResult } = require('express-validator');
+const auth = require('../middleware/auth');
+
+const User = require('../models/User');
+const Water = require('../models/Water');
 
 // @route    GET api/water
 // @desc     get drinking water amount for today
 // @acess    Private
 
-router.get('/', (req, res) => {
-    res.send('Get drinking water amount');
+router.get('/', auth, async (req, res) => {
+    const today = new Date().toISOString().substring(0, 10);
+
+    try {
+        let waterToday = await Water.findOne({ user: req.user.id, date: today });
+
+        if (waterToday) {
+            return res.status(200).json(waterToday);
+        }
+    
+        waterToday = new Water({
+            user: req.user.id,
+            date: today,
+            water: 0
+        });
+        
+        const newWaterRecord = await waterToday.save();
+        res.status(200).json(newWaterRecord);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Server Error' });
+    }
 });
 
 // @route    PUT api/water

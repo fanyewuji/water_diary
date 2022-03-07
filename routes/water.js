@@ -78,8 +78,14 @@ router.put('/:id',
 // @desc     get drinking water amount for each day in the whole year
 // @acess    Private
 
-router.get('/all', (req, res) => {
-    res.send('Get drinking water amount for each day in the whole year');
+router.get('/all', auth, async (req, res) => {
+    try {
+        const waterRecords = await Water.find({ user: req.user.id }).sort({ date: -1 });
+        res.status(200).json(waterRecords);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
 });
 
 module.exports = router;

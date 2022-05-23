@@ -3,9 +3,8 @@ import WaterContext from './waterContext';
 import waterReducer from './waterReducer';
 
 import { 
-    DRINK_ONE,
+    DRINK_WATER,
     SET_TODAY,
-    UPDATE_TODAY,
 } from '../types';
 
 const WaterState = props => {
@@ -13,7 +12,7 @@ const WaterState = props => {
         waterToday: {
             id: 1,
             date: '2022-04-27',
-            water: 2
+            water: 100
         }
     };
 
@@ -21,12 +20,19 @@ const WaterState = props => {
 
     // Set today's water
 
-    // Update today's water
+    // drink water and update today's water
+    const drinkWater = amount => {
+        dispatch({
+            type: DRINK_WATER,
+            payload: amount
+        })
+    }
 
     return (
         <WaterContext.Provider
             value={{
-                waterToday: state.waterToday
+                waterToday: state.waterToday,
+                drinkWater
             }}>
             {props.children}
         </WaterContext.Provider>

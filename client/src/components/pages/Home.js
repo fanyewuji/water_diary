@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
+import Water from '../water/Water';
 
 const Home = () => {
   return (
-    <div>This is Home</div>
+    <Water />
   )
 }
 

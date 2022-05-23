@@ -400,6 +400,31 @@ table th {
   transition: opacity 1000ms ease-in;
 }
 
+
+.drinkBtns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.oneCupBtn {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.oneCupIcon {
+  cursor: pointer;
+}
+
+.anyAmountBtn {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+}
+
 /* Mobile Styles */
 @media (max-width: 700px) {
   .hide-sm {

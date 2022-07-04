@@ -12,7 +12,8 @@ const WaterState = props => {
         waterToday: {
             id: 1,
             date: '2022-04-27',
-            water: 100
+            water: 50,
+            goal: 2000
         }
     };
 

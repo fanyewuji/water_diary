@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import WaterContext from '../../context/water/waterContext';
+import ProgressBar from './ProgressBar';
 
 const cupIcon = 
 <svg width="32px" height="32px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -29,35 +30,39 @@ const Water = () => {
     }
 
     return (
-        <>
-            <div>You drink { waterToday.water } mL of water today</div>
-            <div className='drinkBtns'>
-                <div className='oneCupBtn'>
-                    <div className='oneCupIcon' onClick={handleDrinkOneCup}>
-                        { cupIcon }
+        <div className='waterContainer'>
+            <div className='leftColumn'>
+                <span className='waterStatus'>You drink { waterToday.water } mL of water today</span>
+                <ProgressBar progress={waterToday.water/waterToday.goal*100}/>
+            </div>
+            <div className='rightColumn'>
+                <div className='drinkBtns'>
+                    <div className='oneCupBtn'>
+                        <div className='oneCupIcon' onClick={handleDrinkOneCup}>
+                            { cupIcon }
+                        </div>
+                        <span className='oneCupText'>Drink One Cup (250 mL)</span>
                     </div>
-                    <span className='oneCupText'>Drink One Cup (250 mL)</span>
-                </div>
-                <div className='anyAmountBtn'>
-                    <div className='anyAmountIcon' onClick={handleDrinkAnyAmount}>
-                        { cupIcon }
-                    </div>
-                    <div>
-                        <span className='anyAmountText'>Drink </span>
-                            <input 
-                                type='number'
-                                name='anyAmount'
-                                value={customAmount}
-                                min='0' 
-                                max='3000'
-                                step='50'
-                                onChange={handleChangeAmount}
-                            />
-                        <span className='anyAmountText'> mL Water</span>
+                    <div className='anyAmountBtn'>
+                        <div className='anyAmountIcon' onClick={handleDrinkAnyAmount}>
+                        </div>
+                        <div>
+                            <span className='anyAmountText'>Drink </span>
+                                <input 
+                                    type='number'
+                                    name='anyAmount'
+                                    value={customAmount}
+                                    min='0' 
+                                    max='3000'
+                                    step='50'
+                                    onChange={handleChangeAmount}
+                                />
+                            <span className='anyAmountText'> mL Water</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

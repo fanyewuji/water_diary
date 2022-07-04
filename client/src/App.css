@@ -400,6 +400,30 @@ table th {
   transition: opacity 1000ms ease-in;
 }
 
+.waterContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 35%;
+}
+
+.waterStatus {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px;
+}
+
+.rightColumn {
+  width: 55%;
+}
 
 .drinkBtns {
   display: flex;
@@ -423,6 +447,72 @@ table th {
   flex-direction: row;
   justify-content: start;
   align-items: center;
+}
+
+.anyAmountIcon {
+  width: 28px;
+  height: 28px;
+  margin: 4px;
+  background-image: url('../public/measuring_cup.png');
+  background-size: contain;
+  transform: scaleX(-1);
+}
+
+.progressBar {
+  position: relative;
+  height: 260px;
+  min-width: 70px;
+  border: 2px solid;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.progressComplete {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  background-color: #5225bd;
+  border-radius: 5px;
+  animation: g 2500ms infinite ease-in-out;
+  z-index: 2;
+}
+
+.progressLiquid {
+  position: absolute;
+  z-index: 1;
+  width: 120px;
+  height: 120px;
+  animation: g 2500ms infinite ease-in-out, r 3000ms infinite cubic-bezier(0.5, 0.5, 0.5, 0.5);
+  top: -15px;
+  left: -20px;
+  background-color: #5225bd;
+  border-radius: 41%;
+}
+
+.progressNumber {
+  position: relative;
+  z-index: 2;
+  color: #FFF;
+}
+
+@keyframes g {
+  0% { background-color: #5225bd; }
+  50% { background-color: #607e9e; }
+  100% { background-color: #5225bd; }
+}
+
+@keyframes r {
+  from { transform: rotate(0deg); }
+  from { transform: rotate(360deg); }
 }
 
 /* Mobile Styles */

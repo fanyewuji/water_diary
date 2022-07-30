@@ -5,6 +5,7 @@ import waterReducer from './waterReducer';
 import { 
     DRINK_WATER,
     SET_TODAY,
+    SET_GOAL
 } from '../types';
 
 const WaterState = props => {
@@ -20,6 +21,20 @@ const WaterState = props => {
     const [state, dispatch] = useReducer(waterReducer, initialState);
 
     // Set today's water
+    const setToday = amountToday => {
+        dispatch({
+            type: SET_TODAY,
+            payload: amountToday
+        })
+    } 
+    
+    // Set the goal for drinking water
+    const setGoal = goal => {
+        dispatch({
+            type: SET_GOAL,
+            payload: goal
+        })
+    }
 
     // drink water and update today's water
     const drinkWater = amount => {
@@ -33,7 +48,9 @@ const WaterState = props => {
         <WaterContext.Provider
             value={{
                 waterToday: state.waterToday,
-                drinkWater
+                drinkWater,
+                setToday,
+                setGoal
             }}>
             {props.children}
         </WaterContext.Provider>

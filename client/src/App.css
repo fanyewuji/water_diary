@@ -416,9 +416,59 @@ table th {
 }
 
 .waterStatus {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
   font-size: 16px;
   font-weight: 600;
   padding: 10px;
+}
+
+.waterAmount {
+  margin: 0 5px;
+}
+
+.waterGoal {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 10px 20px;
+}
+
+.goalText {
+  padding: 5px;
+}
+
+.changeAmountBtn,
+.confirmAmountBtn,
+.changeGoalBtn,
+.confirmGoalBtn {
+  display: none;
+  margin: 3px 6px;
+  line-height: 1.1;
+  padding: 6px;
+  border: 0px;
+  border-radius: 4px;
+}
+
+.waterStatus:hover>.changeAmountBtn,
+.waterGoal:hover>.changeGoalBtn {
+  display: inline-block;
+}
+
+.waterStatus>.confirmAmountBtn,
+.waterGoal>.confirmGoalBtn {
+  display: inline-block;
+}
+
+input#setWaterGoal,
+input#setWaterAmountToday {
+  width: 66px;
+  margin: 6px;
 }
 
 .rightColumn {
@@ -434,7 +484,7 @@ table th {
 
 .oneCupBtn {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -445,7 +495,7 @@ table th {
 .anyAmountBtn {
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
 }
 

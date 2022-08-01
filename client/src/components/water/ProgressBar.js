@@ -8,7 +8,7 @@ const ProgressBar = () => {
     const { waterToday } = waterContext;
 
     const progress = parseInt(waterToday.water/waterToday.goal*100);
-
+    // to display progress number properly, adjust the min progressComplete height to be 5% 
     const progressAdjusted = progress < 5 ? 5 : progress;
 
     return (

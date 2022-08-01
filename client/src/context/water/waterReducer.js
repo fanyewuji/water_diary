@@ -2,6 +2,7 @@ import {
     DRINK_WATER,
     SET_TODAY,
     SET_GOAL,
+    SET_CUP_AMOUNT,
 } from '../types';
 
 export default (state, action) => {
@@ -28,6 +29,14 @@ export default (state, action) => {
                 waterToday: {
                     ...state.waterToday,
                     goal: action.payload
+                }
+            };
+        case SET_CUP_AMOUNT:
+            return {
+                ...state,
+                waterToday: {
+                    ...state.waterToday,
+                    cupSize: action.payload
                 }
             };
         default:

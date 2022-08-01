@@ -15,6 +15,16 @@ const WaterSchema = mongoose.Schema({
         required: true,
         default: 0
     },
+    goal: {
+        type: Number,
+        required: true,
+        default: 2000
+    },
+    cupSize: {
+        type: Number,
+        required: true,
+        default: 250
+    },
 });
 
 WaterSchema.index({ user: 1, date: -1 }, { unique: true });

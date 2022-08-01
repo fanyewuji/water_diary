@@ -446,7 +446,9 @@ table th {
 .changeAmountBtn,
 .confirmAmountBtn,
 .changeGoalBtn,
-.confirmGoalBtn {
+.confirmGoalBtn,
+.changeCupSizeBtn,
+.confirmCupSizeBtn {
   display: none;
   margin: 3px 6px;
   line-height: 1.1;
@@ -456,17 +458,20 @@ table th {
 }
 
 .waterStatus:hover>.changeAmountBtn,
-.waterGoal:hover>.changeGoalBtn {
+.waterGoal:hover>.changeGoalBtn,
+.drinkOneCup:hover>.changeCupSizeBtn {
   display: inline-block;
 }
 
 .waterStatus>.confirmAmountBtn,
-.waterGoal>.confirmGoalBtn {
+.waterGoal>.confirmGoalBtn,
+.drinkOneCup>.confirmCupSizeBtn {
   display: inline-block;
 }
 
 input#setWaterGoal,
-input#setWaterAmountToday {
+input#setWaterAmountToday,
+input#setCupSize {
   width: 66px;
   margin: 6px;
 }
@@ -490,6 +495,20 @@ input#setWaterAmountToday {
 
 .oneCupIcon {
   cursor: pointer;
+}
+
+.drinkOneCup {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 10px 20px;
+}
+
+.cupSize {
+  margin: 0 5px;
 }
 
 .anyAmountBtn {

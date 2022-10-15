@@ -4,14 +4,15 @@ import AuthContext from '../../context/auth/authContext';
 
 const Home = () => {
   const authContext = useContext(AuthContext);
-  const { loadUser } = authContext;
+  const { loadUser, loading } = authContext;
   
   useEffect(() => {
     loadUser();
-  });
+    //eslint-disable-next-line
+  }, []);
 
   return (
-    <Water />
+    !loading && <Water />
   )
 }
 

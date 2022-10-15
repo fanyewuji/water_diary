@@ -3,7 +3,7 @@ import AlertContext from '../../context/alert/alertContext';
 import AuthContext from '../../context/auth/authContext';
 import { useNavigate } from 'react-router-dom';
 
-const Register = props => {
+const Register = () => {
   const [ user, setUser ] = useState({
     name: '',
     email: '',
@@ -11,12 +11,12 @@ const Register = props => {
     password2: ''
   });
 
+  const {name, email, password, password2} = user;
+
   const authContext = useContext(AuthContext);
   const alertContext = useContext(AlertContext);
   const { register, error, clearErrors, isAuthenticated } = authContext;
   const { setAlert } = alertContext; 
-
-  const {name, email, password, password2} = user;
 
   const navigate = useNavigate();
 

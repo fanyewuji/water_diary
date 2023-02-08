@@ -1,49 +1,115 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useCallback, useMemo } from 'react';
 import WaterContext from './waterContext';
 import waterReducer from './waterReducer';
+import axios from 'axios';
 
 import { 
+    GET_TODAY,
+    GET_HISTORY,
     DRINK_WATER,
+    SET_WATER,
     SET_TODAY,
-    SET_GOAL,
-    SET_CUP_AMOUNT,
+    WATER_ERROR,
+    HISTORY_ERROR,
+    CLEAR_ERRORS,
+    HIDE_HISTORY,
 } from '../types';
 
 const WaterState = props => {
     const initialState = {
-        waterToday: {
-            id: 1,
-            date: '2022-04-27',
-            water: 50,
-            goal: 2000,
-            cupSize: 250
-        }
+        waterToday: null,
+        waterHistory: null,
+        loading: true,
+        loadingWaterHistory: true,
+        showWaterHistory: true,
+        error: null,
     };
 
     const [state, dispatch] = useReducer(waterReducer, initialState);
 
-    // Set today's water
-    const setToday = amountToday => {
+    const getToday = async () => {
+        const config = {
+            headers: {
+                'x-timezone-offset': new Date().getTimezoneOffset()
+            }
+        }
+
+        try {
+            const res = await axios.get('/api/water', config);
+            dispatch({
+                type: GET_TODAY,
+                payload: res.data
+            })
+        } catch (err) {
+            dispatch({
+                type: WATER_ERROR,
+                payload: err.response.data.msg
+            })
+        }
+        
+    }
+
+    const getWaterHistory = async () => {
+        try {
+            const res = await axios.get('/api/water/all');
+            dispatch({
+                type: GET_HISTORY,
+                payload: res.data
+            })
+        } catch (err) {
+            dispatch({
+                type: HISTORY_ERROR,
+                payload: err.response.data.msg
+            })
+        }
+    }
+
+    const waterRecordId = useMemo(() => {
+        return state.waterToday?._id || null
+    }, [state.waterToday?._id])
+
+    const update = useCallback(async (waterRecord) => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        try {
+            const res = await axios.put(`api/water/${waterRecordId}`, waterRecord, config);
+
+            dispatch({
+                type: SET_TODAY,
+                payload: res.data
+            });
+        } catch (err) {
+            dispatch({
+                type: WATER_ERROR,
+                payload: err.response.data.msg || err.response.data.errors[0].msg
+            })
+        }    
+    }, [waterRecordId])
+    
+    // update today's water
+    const updateWater = useCallback(amountToday => {
+        update({ 'water': amountToday });
+    }, [update]); 
+
+    const setWater = waterAmount => {
         dispatch({
-            type: SET_TODAY,
-            payload: amountToday
-        })
-    } 
+            type: SET_WATER,
+            payload: waterAmount
+        });
+    }
     
     // Set the goal for drinking water
-    const setGoal = goal => {
-        dispatch({
-            type: SET_GOAL,
-            payload: goal
-        })
+    const updateGoal = goal => {
+        update({ 'goal': goal });
     }
 
     // Set Cup Size
-    const setCupAmount = cupSize => {
-        dispatch({
-            type: SET_CUP_AMOUNT,
-            payload: cupSize
-        })
+    const updateCupAmount = cupSize => {
+        update({ 'cupSize': cupSize });
     }  
 
     // drink water and update today's water
@@ -54,14 +120,33 @@ const WaterState = props => {
         })
     }
 
+    // hide waterHistory
+    const hideHistory = () => {
+        dispatch({ type: HIDE_HISTORY })
+    }
+
+    const clearErrors = () => {
+        dispatch({ type: CLEAR_ERRORS })
+    }
+
     return (
         <WaterContext.Provider
             value={{
                 waterToday: state.waterToday,
+                waterHistory: state.waterHistory,
+                showWaterHistory: state.showWaterHistory,
+                error: state.error,
+                loading: state.loading,
+                loadingWaterHistory: state.loadingWaterHistory,
+                getToday,
+                getWaterHistory,
                 drinkWater,
-                setToday,
-                setGoal,
-                setCupAmount,
+                setWater,
+                updateWater,
+                updateGoal,
+                updateCupAmount,
+                hideHistory,
+                clearErrors,
             }}>
             {props.children}
         </WaterContext.Provider>

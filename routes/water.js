@@ -14,8 +14,9 @@ const DEFAULT_CUPSIZE = 250;
 // @acess    Private
 
 router.get('/', auth, async (req, res) => {
-    const today = new Date().toISOString().substring(0, 10);
-
+    const timeZoneOffset = req.header('x-timezone-offset') || 0;
+    const today = new Date(new Date() - timeZoneOffset * 60000).toISOString().substring(0, 10);
+    
     try {
         let waterToday = await Water.findOne({ user: req.user.id, date: today });
 
@@ -111,7 +112,7 @@ router.get('/all', auth, async (req, res) => {
         res.status(200).json(waterRecords);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).send({ msg: 'Server Error' });
     }
 });
 

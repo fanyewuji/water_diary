@@ -1,6 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect, useMemo } from 'react';
 import WaterContext from '../../context/water/waterContext';
+import AlertContext from '../../context/alert/alertContext';
 import ProgressBar from './ProgressBar';
+import WaterHistory from './WaterHistory';
 
 const cupIcon = 
 <svg width="32px" height="32px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -9,25 +11,53 @@ const cupIcon =
 
 const Water = () => {
     const waterContext = useContext(WaterContext);
+    const alertContext = useContext(AlertContext);
 
-    const { waterToday, drinkWater, setToday, setGoal, setCupAmount } = waterContext;
+    const { waterToday, drinkWater, setWater, updateWater, updateGoal, updateCupAmount, getToday, loading, error, clearErrors } = waterContext;
+
+    const { setAlert } = alertContext;
 
     const [customAmount, setCustomAmount] = useState(0);
 
     const [waterAmountActive, setWaterAmountActive] = useState(false);
 
-    const [waterAmount, setWaterAmount] = useState(waterToday.water);
+    const [waterAmount, setWaterAmount] = useState(waterToday?.water);
 
     const [waterGoalActive, setWaterGoalActive] = useState(false);
 
-    const [waterGoal, setWaterGoal] = useState(waterToday.goal);
+    const [waterGoal, setWaterGoal] = useState(waterToday?.goal);
 
     const [cupSizeActive, setCupSizeActive] = useState(false);
 
-    const [cupSize, setCupSize] = useState(waterToday.cupSize);
+    const [cupSize, setCupSize] = useState(waterToday?.cupSize);
+
+    const currentWater = useMemo(() => {
+        return waterToday?.water || 0
+    }, [waterToday?.water])
+
+    useEffect(() => {
+        getToday();
+        // eslint-disable-next-line
+    }, []);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            updateWater(currentWater);
+        }, 500);
+        return () => {
+            clearTimeout(timer);
+        }
+    }, [currentWater, updateWater]);
+
+    useEffect(() => {
+        if (!!error) {
+            setAlert(error, 'danger');
+            clearErrors();
+        }
+    }, [error, setAlert, clearErrors])
 
     const handleDrinkOneCup = () => {
-        waterContext.drinkWater(waterToday.cupSize);
+        drinkWater(waterToday.cupSize);
     }
 
     const handleDrinkAnyAmount = () => {
@@ -49,7 +79,7 @@ const Water = () => {
 
     const handleClickConfirmAmount = () => {
         if (waterAmount >= 0) {
-            setToday(Number(waterAmount));
+            setWater(Number(waterAmount));
             setWaterAmountActive(false);
         } else {
             window.alert('change water amount to a number > 0')
@@ -66,7 +96,7 @@ const Water = () => {
 
     const handleClickConfirmGoal = () => {
         if (waterGoal > 100) {
-            setGoal(waterGoal);
+            updateGoal(waterGoal);
             setWaterGoalActive(false);
         } else {
             window.alert('change water goal to a number > 100 mL!')
@@ -83,7 +113,7 @@ const Water = () => {
 
     const handleClickConfirmCupSize = () => {
         if (cupSize >= 0 && cupSize <= 1000) {
-            setCupAmount(Number(cupSize));
+            updateCupAmount(Number(cupSize));
             setCupSizeActive(false);
         } else {
             window.alert('change cup size to a number between 0 and 1000')
@@ -91,126 +121,131 @@ const Water = () => {
     }
 
     return (
-        <div className='waterContainer'>
-            <div className='leftColumn'>
-                <div className='waterStatus'>
-                    I drink 
-                        { waterAmountActive 
-                            ? <input 
-                                type="number" 
-                                id='setWaterAmountToday' 
-                                name='waterAmountToday' 
-                                min='0'
-                                max='10000'
-                                step='100'
-                                defaultValue={waterToday.water}
-                                onChange={handleChangeWaterAmount}
-                            ></input>
-                            : <p className='waterAmount'>{ waterToday.water }</p>}
-                    mL of water today
-                    { !waterAmountActive && <button 
-                        className='changeAmountBtn'
-                        onClick={handleClickChangeAmount}
-                    >
-                        Change
-                    </button>}
-                    { waterAmountActive && <button 
-                        className='confirmAmountBtn'
-                        onClick={handleClickConfirmAmount}
-                    >
-                        Confirm
-                    </button>}
-                </div>
-                <div className='waterGoal'>{`Goal: `}
-                    { waterGoalActive 
-                        ? <div>
-                            <input 
-                                type="number" 
-                                id='setWaterGoal' 
-                                name='waterGoal' 
-                                min='0'
-                                max='10000'
-                                step='100'
-                                defaultValue={waterToday.goal}
-                                onChange={handleChangeWaterGoal}
-                            ></input>
-                            <label htmlFor='setWaterGoal'>mL</label>
-                        </div>  
-                        : <span className='goalText'>
-                            { waterToday.goal } mL
-                        </span>
-                    }           
-                    { !waterGoalActive && <button 
-                        className='changeGoalBtn'
-                        onClick={handleClickChangeGoal}
-                    >
-                        Change
-                    </button>}
-                    { waterGoalActive && <button 
-                        className='confirmGoalBtn'
-                        onClick={handleClickConfirmGoal}
-                    >
-                        Confirm
-                    </button>}
-                </div>
-                <ProgressBar progress={waterToday.water/waterToday.goal*100}/>
-            </div>
-            <div className='rightColumn'>
-                <div className='drinkBtns'>
-                    <div className='oneCupBtn'>
-                        <div className='oneCupIcon' onClick={handleDrinkOneCup}>
-                            { cupIcon }
-                        </div>
-                        <div className='drinkOneCup'>Drink One Cup -
-                            { cupSizeActive 
-                                ? <div>
-                                    <input 
+        !loading && !!waterToday 
+            ? <>
+                <div className='waterContainer'>
+                    <div className='leftColumn'>
+                        <div className='waterStatus'>
+                            I drink 
+                                { waterAmountActive 
+                                    ? <input 
                                         type="number" 
-                                        id='setCupSize' 
-                                        name='cupSize' 
+                                        id='setWaterAmountToday' 
+                                        name='waterAmountToday' 
                                         min='0'
-                                        max='1000'
-                                        step='50'
-                                        defaultValue={waterToday.cupSize}
-                                        onChange={handleChangeCupSize}
+                                        max='10000'
+                                        step='100'
+                                        defaultValue={waterToday.water}
+                                        onChange={handleChangeWaterAmount}
                                     ></input>
-                                </div>
-                                : <p className='cupSize'>{ waterToday.cupSize }</p> }
-                            mL
-                            { !cupSizeActive && <button 
-                                className='changeCupSizeBtn'
-                                onClick={handleClickChangeCupSize}
+                                    : <p className='waterAmount'>{ waterToday.water }</p>}
+                            mL of water today
+                            { !waterAmountActive && <button 
+                                className='changeAmountBtn'
+                                onClick={handleClickChangeAmount}
                             >
                                 Change
                             </button>}
-                            { cupSizeActive && <button 
-                                className='confirmCupSizeBtn'
-                                onClick={handleClickConfirmCupSize}
+                            { waterAmountActive && <button 
+                                className='confirmAmountBtn'
+                                onClick={handleClickConfirmAmount}
                             >
                                 Confirm
                             </button>}
                         </div>
-                    </div>
-                    <div className='anyAmountBtn'>
-                        <div className='anyAmountIcon' onClick={handleDrinkAnyAmount}>
+                        <div className='waterGoal'>{`Goal: `}
+                            { waterGoalActive 
+                                ? <div>
+                                    <input 
+                                        type="number" 
+                                        id='setWaterGoal' 
+                                        name='waterGoal' 
+                                        min='0'
+                                        max='10000'
+                                        step='100'
+                                        defaultValue={waterToday.goal}
+                                        onChange={handleChangeWaterGoal}
+                                    ></input>
+                                    <label htmlFor='setWaterGoal'>mL</label>
+                                </div>  
+                                : <span className='goalText'>
+                                    { waterToday.goal } mL
+                                </span>
+                            }           
+                            { !waterGoalActive && <button 
+                                className='changeGoalBtn'
+                                onClick={handleClickChangeGoal}
+                            >
+                                Change
+                            </button>}
+                            { waterGoalActive && <button 
+                                className='confirmGoalBtn'
+                                onClick={handleClickConfirmGoal}
+                            >
+                                Confirm
+                            </button>}
                         </div>
-                        <div>
-                            <span className='anyAmountText'>Drink </span>
-                                <input 
-                                    type='number'
-                                    name='anyAmount'
-                                    value={customAmount}
-                                    min='0' 
-                                    max='3000'
-                                    step='50'
-                                    onChange={handleChangeCustomAmount}
-                                />
-                            <span className='anyAmountText'> mL Water</span>
+                        <ProgressBar progress={waterToday.water/waterToday.goal*100}/>
+                    </div>
+                    <div className='rightColumn'>
+                        <div className='drinkBtns'>
+                            <div className='oneCupBtn'>
+                                <div className='oneCupIcon' onClick={handleDrinkOneCup}>
+                                    { cupIcon }
+                                </div>
+                                <div className='drinkOneCup'>Drink One Cup -
+                                    { cupSizeActive 
+                                        ? <div>
+                                            <input 
+                                                type="number" 
+                                                id='setCupSize' 
+                                                name='cupSize' 
+                                                min='0'
+                                                max='1000'
+                                                step='50'
+                                                defaultValue={waterToday.cupSize}
+                                                onChange={handleChangeCupSize}
+                                            ></input>
+                                        </div>
+                                        : <p className='cupSize'>{ waterToday.cupSize }</p> }
+                                    mL
+                                    { !cupSizeActive && <button 
+                                        className='changeCupSizeBtn'
+                                        onClick={handleClickChangeCupSize}
+                                    >
+                                        Change
+                                    </button>}
+                                    { cupSizeActive && <button 
+                                        className='confirmCupSizeBtn'
+                                        onClick={handleClickConfirmCupSize}
+                                    >
+                                        Confirm
+                                    </button>}
+                                </div>
+                            </div>
+                            <div className='anyAmountBtn'>
+                                <div className='anyAmountIcon' onClick={handleDrinkAnyAmount}>
+                                </div>
+                                <div>
+                                    <span className='anyAmountText'>Drink </span>
+                                        <input 
+                                            type='number'
+                                            name='anyAmount'
+                                            value={customAmount}
+                                            min='0' 
+                                            max='3000'
+                                            step='50'
+                                            onChange={handleChangeCustomAmount}
+                                        />
+                                    <span className='anyAmountText'> mL Water</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+                <WaterHistory />
+            </>
+        : <p>Loading...</p>
     )
 }
 

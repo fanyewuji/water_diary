@@ -376,6 +376,14 @@ table th {
   margin: 0 0.25rem;
 }
 
+.navbar h1 {
+  font-size: 28px;
+}
+
+.navbar h1>i {
+  margin-right: 10px;
+}
+
 .navbar a:hover {
   color: var(--light-color);
 }
@@ -405,6 +413,7 @@ table th {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-bottom: 15px;
 }
 
 .leftColumn {
@@ -478,6 +487,7 @@ input#setCupSize {
 }
 
 .rightColumn {
+  padding-top: 10%;
   width: 55%;
 }
 
@@ -585,10 +595,55 @@ input#setCupSize {
   from { transform: rotate(360deg); }
 }
 
+.waterHistory {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.viewHistoryBtn, .hideHistoryBtn {
+  appearance: none;
+  background-color: #2f80ed;
+  border-radius: 6px;
+  border-style: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  color: #fff;
+  font-family: Inter,Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1.5;
+  outline: none;
+  padding: 6px 18px;
+  text-align: center;
+  transform: translate3d(0, 0, 0);
+  transition: all .3s;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.hideHistoryBtn {
+  background-color: #ed8b2f;
+}
+
+.viewHistoryBtn:hover, .hideHistoryBtn:hover {
+  background-color: #1366d6;
+  box-shadow: rgba(0, 0, 0, .05) 0 5px 30px, rgba(0, 0, 0, .05) 0 1px 4px;
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: .35s;
+}
+
+.hideHistoryBtn:hover {
+  background-color: #d56e1ff2;
+}
+
 .waterCalendar {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   margin: 20px 0 20px 0;
 }
@@ -598,7 +653,7 @@ input#setCupSize {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-right: 0 30px 0 20px;
+  margin-right: 26px;
 }
 
 .dayInWeek {

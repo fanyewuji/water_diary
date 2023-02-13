@@ -6,7 +6,7 @@ import { getDateXDaysAgo } from './date';
 const WaterHistory = () => {
   const waterContext = useContext(WaterContext);
 
-  const { getWaterHistory, waterHistory, loadingWaterHistory } = waterContext;
+  const { getWaterHistory, waterHistory, loadingWaterHistory, showWaterHistory, hideWaterHistory } = waterContext;
 
   const waterHistoryByDate = waterHistory?.reduce((waterByDate, record) => {
     const {date, water, goal} = record;
@@ -20,20 +20,29 @@ const WaterHistory = () => {
 
   console.log('waterPastYear: ', waterPastYear);
 
-  const handleClick = () => {
+  const handleClickGetHistory = () => {
     getWaterHistory();
   }
 
+  const handleClickHide = () => {
+    hideWaterHistory();
+  }
+  console.log('loadingHistory: ', loadingWaterHistory);
+  console.log('show: ', showWaterHistory);
+
   return (
-    <>
-      <button onClick={handleClick}>WaterHistory</button>
+    <div className='waterHistory'>
+      { !showWaterHistory 
+        ? <button className='viewHistoryBtn' onClick={handleClickGetHistory}>View Water History</button>
+        : <button className='hideHistoryBtn' onClick={handleClickHide}>Hide Water Records</button>
+      }
       <div>
         { loadingWaterHistory 
           ? <span>loading water history</span>
-          : <WaterCalendar waterYearlyRecords={waterPastYear} />
+          : showWaterHistory && <WaterCalendar waterYearlyRecords={waterPastYear} />
         }
       </div>
-    </>
+    </div>
   )
 }
 

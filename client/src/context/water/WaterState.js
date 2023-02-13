@@ -13,6 +13,7 @@ import {
     HISTORY_ERROR,
     CLEAR_ERRORS,
     HIDE_HISTORY,
+    LOAD_HISTORY,
 } from '../types';
 
 const WaterState = props => {
@@ -20,8 +21,8 @@ const WaterState = props => {
         waterToday: null,
         waterHistory: null,
         loading: true,
-        loadingWaterHistory: true,
-        showWaterHistory: true,
+        loadingWaterHistory: false,
+        showWaterHistory: false,
         error: null,
     };
 
@@ -50,6 +51,8 @@ const WaterState = props => {
     }
 
     const getWaterHistory = async () => {
+        dispatch({ type: LOAD_HISTORY });
+        
         try {
             const res = await axios.get('/api/water/all');
             dispatch({
@@ -121,7 +124,7 @@ const WaterState = props => {
     }
 
     // hide waterHistory
-    const hideHistory = () => {
+    const hideWaterHistory = () => {
         dispatch({ type: HIDE_HISTORY })
     }
 
@@ -145,7 +148,7 @@ const WaterState = props => {
                 updateWater,
                 updateGoal,
                 updateCupAmount,
-                hideHistory,
+                hideWaterHistory,
                 clearErrors,
             }}>
             {props.children}

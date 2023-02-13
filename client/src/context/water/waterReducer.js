@@ -5,6 +5,7 @@ import {
     SET_TODAY,
     WATER_ERROR,
     CLEAR_ERRORS,
+    LOAD_HISTORY,
     GET_HISTORY,
     HIDE_HISTORY,
     HISTORY_ERROR,
@@ -18,11 +19,17 @@ export default (state, action) => {
                 waterToday: action.payload,
                 loading: false
             }
+        case LOAD_HISTORY:
+            return {
+                ...state,
+                loadingWaterHistory: true,
+            }
         case GET_HISTORY:
             return {
                 ...state,
                 waterHistory: action.payload,
-                loadingWaterHistory: false
+                loadingWaterHistory: false,
+                showWaterHistory: true
             }
         case DRINK_WATER:
             return {

@@ -13,6 +13,7 @@ export const LOGOUT = 'LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SET_ALERT = 'SET_ALERT';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
+export const LOAD_HISTORY = 'LOAD_HISTORY';
 export const GET_HISTORY = 'GET_HISTORY';
 export const HISTORY_ERROR = 'HISTORY_ERROR';
 export const HIDE_HISTORY = 'HIDE_HISTORY';

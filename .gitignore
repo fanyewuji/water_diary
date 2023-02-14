@@ -2,6 +2,7 @@ node_modules
 build
 npm-debug.log
 config/default.json
+config/production.json
 .env
 .DS_Store
 
